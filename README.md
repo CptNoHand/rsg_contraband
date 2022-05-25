@@ -29,3 +29,6 @@
 # Support
 - discord : https://discord.gg/s5uSk56B65
 - email : rexshackuk@gmail.com
+
+# Thanks
+- thanks to Omen for the work put into this resource
