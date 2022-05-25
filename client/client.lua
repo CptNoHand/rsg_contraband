@@ -283,11 +283,11 @@ AddEventHandler('rsg_contraband:client:calllawman', function(sellcoords, alert)
 	if job == Config.LawmanJob then
 		exports['rsg_notify']:DisplayNotification('law alert : '..alert, 5000)
 		local sellblip = Citizen.InvokeNative(0x554D9D53F696D002,1664425300, sellcoords.x, sellcoords.y, sellcoords.z)
-		SetBlipSprite(sellblip, 1095891419, true)
+		SetBlipSprite(sellblip, Config.LawBlipHash, true)
 		SetBlipScale(sellblip, 0.2)
 		Citizen.InvokeNative(0x9CB1A1623062F402, sellblip, 'contraband')
 		 Citizen.InvokeNative(0x662D364ABF16DE2F, sellblip, 0x6F85C3CE) -- red color blip
-		Wait(300000) -- blips will dispears after time expires (5 mins)
+		Wait(Config.LawAlertTime) -- blips will dispears after time expires (5 mins)
 		RemoveBlip(sellblip)
 	end
 end)
