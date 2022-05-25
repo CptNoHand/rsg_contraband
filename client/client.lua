@@ -8,7 +8,7 @@ local stealData = {}
 local availableContraband = {}
 local currentOfferContraband = nil
 
-CurrentCops = 0
+CurrentLawman = 0
 
 RegisterCommand('sellcontraband', function(source)
     TriggerEvent('rsg_contraband:client:contrabandselling')
@@ -16,7 +16,7 @@ end)
 
 RegisterNetEvent('rsg_contraband:client:contrabandselling', function()
 	exports['qbr-core']:TriggerCallback('rsg_contraband:server:contrabandselling:getAvailableContraband', function(result)
-        if CurrentCops >= Config.MinimumContrabandLawman then
+        if CurrentLawman >= Config.MinimumContrabandLawman then
             if result ~= nil then
                 availableContraband = result
                 if not contrabandselling then
@@ -39,9 +39,9 @@ RegisterNetEvent('rsg_contraband:client:contrabandselling', function()
     end)
 end)
 
-RegisterNetEvent('rsg_contraband:client:SetCopCount', function(amount)
-    CurrentCops = amount
-	print(CurrentCops)
+RegisterNetEvent('rsg_contraband:client:SetLawmanCount', function(amount)
+    CurrentLawman = amount
+	print(CurrentLawman)
 end)
 
 RegisterNetEvent('rsg_contraband:client:refreshAvailableContraband', function(items)

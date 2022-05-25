@@ -74,13 +74,13 @@ RegisterNetEvent('rsg_contraband:server:robContraband', function(item, amount)
     end
 end)
 
-RegisterNetEvent('rsg_contraband:server:UpdateCurrentCops', function()
+RegisterNetEvent('rsg_contraband:server:UpdateCurrentLawmen', function()
     local amount = 0
     local players = exports['qbr-core']:GetQBPlayers()
     for k, v in pairs(players) do
-        if v.PlayerData.job.name == "lawman" and v.PlayerData.job.onduty then
+        if v.PlayerData.job.name == Config.LawmanJob and v.PlayerData.job.onduty then
             amount = amount + 1
         end
     end
-    TriggerClientEvent("rsg_contraband:client:SetCopCount", -1, amount)
+    TriggerClientEvent("rsg_contraband:client:SetLawmanCount", -1, amount)
 end)
