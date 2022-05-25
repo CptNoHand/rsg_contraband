@@ -3,6 +3,9 @@
 - youtube : https://www.youtube.com/channel/UCikEgGfXO-HCPxV5rYHEVbA
 - github : https://github.com/RexShack
 
+# Video
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/F39vngYpLE0&t/0.jpg)](https://www.youtube.com/watch?v=F39vngYpLE0&t)
+
 # Framework QBCore RedM Edition
 - https://github.com/qbcore-redm-framework
 
