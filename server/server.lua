@@ -31,7 +31,7 @@ RegisterNetEvent('rsg_contraband:server:sellContraband', function(item, amount, 
         local hasItem = Player.Functions.GetItemByName(item)
         local AvailableContraband = {}
         if hasItem.amount >= amount then
-			TriggerClientEvent('rsg_notify:client:notifiy', src, 'offer accepted', 5000)
+			TriggerClientEvent('QBCore:Notify', src, 9, 'offer accepted', 5000, 0, 'hud_textures', 'check', 'COLOR_WHITE')
             Player.Functions.RemoveItem(item, amount)
             Player.Functions.AddMoney('cash', price, "sold-contraband")
             TriggerClientEvent('inventory:client:ItemBox', src, sharedItems[item], "remove")

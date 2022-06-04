@@ -22,19 +22,19 @@ RegisterNetEvent('rsg_contraband:client:contrabandselling', function()
                 if not contrabandselling then
                     contrabandselling = true
                     LocalPlayer.state:set("inv_busy", true, true)
-					exports['rsg_notify']:DisplayNotification('started selling contraband', 5000)
+					exports['qbr-core']:Notify(9, 'started selling contraband', 5000, 0, 'hud_textures', 'check', 'COLOR_WHITE')
                     startLocation = GetEntityCoords(PlayerPedId())
                 else
                     contrabandselling = false
                     LocalPlayer.state:set("inv_busy", false, true)
-					exports['rsg_notify']:DisplayNotification('stopped selling contraband', 5000)
+					exports['qbr-core']:Notify(9, 'stopped selling contraband', 5000, 0, 'hud_textures', 'check', 'COLOR_WHITE')
                 end
             else
-				exports['rsg_notify']:DisplayNotification('no contraband to sell!', 5000)
+				exports['qbr-core']:Notify(9, 'no contraband to sell!', 5000, 0, 'mp_lobby_textures', 'cross', 'COLOR_WHITE')
                 LocalPlayer.state:set("inv_busy", false, true)
             end
         else
-            exports['rsg_notify']:DisplayNotification('not enough lawmen to sell!', 5000)
+			exports['qbr-core']:Notify(9, 'not enough lawmen to sell!', 5000, 0, 'mp_lobby_textures', 'cross', 'COLOR_WHITE')
         end
     end)
 end)
@@ -47,7 +47,7 @@ end)
 RegisterNetEvent('rsg_contraband:client:refreshAvailableContraband', function(items)
     availableContraband = items
     if #availableContraband <= 0 then
-		exports['rsg_notify']:DisplayNotification('no contraband left to sell!', 5000)
+		exports['qbr-core']:Notify(9, 'no contraband left to sell!', 5000, 0, 'mp_lobby_textures', 'cross', 'COLOR_WHITE')
         contrabandselling = false
         LocalPlayer.state:set("inv_busy", false, true)
     end
@@ -72,7 +72,7 @@ local function loadAnimDict(dict)
 end
 
 local function toFarAway()
-	exports['rsg_notify']:DisplayNotification('you moved too far away!', 5000)
+	exports['qbr-core']:Notify(9, 'you moved too far away!', 5000, 0, 'mp_lobby_textures', 'cross', 'COLOR_WHITE')
     LocalPlayer.state:set("inv_busy", false, true)
     contrabandselling = false
     hasTarget = false
@@ -100,8 +100,10 @@ local function SellToPed(ped)
         hasTarget = false
         return
     elseif succesChance >= 19 then
-		local sellcoords = GetEntityCoords(PlayerPedId())
-		TriggerEvent('rsg_contraband:client:calllawman', sellcoords, 'contraband sale in progress')
+		local alertcoords = GetEntityCoords(PlayerPedId())
+		local blipname = 'contraband'
+		local alertmsg = 'contraband sale in progress'
+		TriggerEvent('rsg_alerts:client:lawmanalert', alertcoords, blipname, alertmsg)
 		hasTarget = false
         return
     end
@@ -158,7 +160,7 @@ local function SellToPed(ped)
             pedDist = #(coords - pedCoords)
             if getRobbed == 18 or getRobbed == 9 then
                 TriggerServerEvent('rsg_contraband:server:robContraband', availableContraband[contrabandType].item, contrabandAmount)
-				exports['rsg_notify']:DisplayNotification('you have been robbed!', 5000)
+				exports['qbr-core']:Notify(9, 'you have been robbed!', 5000, 0, 'mp_lobby_textures', 'cross', 'COLOR_WHITE')
                 stealingPed = ped
                 stealData = {
                     item = availableContraband[contrabandType].item,
@@ -190,7 +192,7 @@ local function SellToPed(ped)
                     end
 
                     if IsControlJustPressed(0,0x4CC0E2FE) then
-						exports['rsg_notify']:DisplayNotification('offer declined', 5000)
+						exports['qbr-core']:Notify(9, 'offer declined', 5000, 0, 'mp_lobby_textures', 'cross', 'COLOR_WHITE')
                         hasTarget = false
                         SetPedKeepTask(ped, false)
                         SetEntityAsNoLongerNeeded(ped)
@@ -274,20 +276,4 @@ CreateThread(function()
         end
         Wait(sleep)
     end
-end)
-
--- lawman alert
-RegisterNetEvent('rsg_contraband:client:calllawman')
-AddEventHandler('rsg_contraband:client:calllawman', function(sellcoords, alert)
-	local job = exports['qbr-core']:GetPlayerData().job.name
-	if job == Config.LawmanJob then
-		exports['rsg_notify']:DisplayNotification('law alert : '..alert, 5000)
-		local sellblip = Citizen.InvokeNative(0x554D9D53F696D002,1664425300, sellcoords.x, sellcoords.y, sellcoords.z)
-		SetBlipSprite(sellblip, Config.LawBlipHash, true)
-		SetBlipScale(sellblip, 0.2)
-		Citizen.InvokeNative(0x9CB1A1623062F402, sellblip, 'contraband')
-		 Citizen.InvokeNative(0x662D364ABF16DE2F, sellblip, 0x6F85C3CE) -- red color blip
-		Wait(Config.LawAlertTime) -- blips will dispears after time expires (5 mins)
-		RemoveBlip(sellblip)
-	end
 end)
